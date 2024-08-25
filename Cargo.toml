@@ -30,3 +30,8 @@ structopt = "0.3.26"
 lazy_static = "1.4.0"
 regex = "1.7.1"
 itertools = "0.10.5"
+pest = "2.7.11"
+
+[dev-dependencies]
+pest-test = "0.1.6"
+pest-test-gen = "0.1.7"

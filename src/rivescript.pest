@@ -1,0 +1,44 @@
+// Parsing Expression Grammar for RiveScript
+
+WHITESPACE = _{ " " }
+COMMENT    = _{ ("/*" ~ (!"*/" ~ ANY)* ~ "*/") | "//" }
+EOL        =  { NEWLINE | "^" }
+txt        =  { ASCII_ALPHANUMERIC+ }
+
+var_type = { ("global" | "var" | "array" | "sub" | "person") }
+
+var_name = { txt }
+value    = { (!NEWLINE ~ ANY)* }
+
+version_number      = { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+){, 2} }
+version_declaration = { "version" ~ "=" ~ version_number }
+
+variable_definition = { var_type ~ var_name ~ "=" ~ value }
+
+definition = { "!" ~ (variable_definition | version_declaration) ~ NEWLINE }
+
+object_name  = { txt }
+object_lang  = { txt }
+object_close = { "< object" }
+body         = { (!object_close ~ ANY)+ }
+object_macro = { ">" ~ "object" ~ txt ~ txt ~ body ~ object_close }
+
+weight = @{ "{weight=" ~ ASCII_DIGIT+ ~ "}" }
+
+trigger_txt         =  { (ASCII_ALPHA_LOWER | ASCII_DIGIT)+ }
+optional            =  { "[" ~ value ~ "]" }
+array_ref           = ${ "@" ~ txt }
+inline_alternatives =  { trigger_txt ~ ("|" ~ trigger_txt)* }
+trigger_alternation =  { "(" ~ (array_ref | inline_alternatives) ~ ")" }
+wildcard            =  { "*" }
+trigger_content     =  { (trigger_txt | trigger_alternation | wildcard | optional)+ }
+trigger             =  { "+" ~ trigger_content }
+
+tag              = { "<" ~ (!">" ~ txt) ~ ">" }
+response_content = { (txt | tag)+ }
+response         = { "-" ~ response_content ~ weight? }
+
+previous = { "%" ~ trigger_content }
+
+operator    = { ("==" | "eq" | "!=" | "ne" | "<>" | "<=" | ">=" | "<" | ">") }
+conditional = { "*" ~ (tag | value) ~ operator ~ (tag | value) }
