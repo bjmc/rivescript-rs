@@ -3,7 +3,7 @@
 WHITESPACE = _{ " " }
 COMMENT    = _{ ("/*" ~ (!"*/" ~ ANY)* ~ "*/") | "//" }
 EOL        =  { NEWLINE | "^" }
-txt        =  { ASCII_ALPHANUMERIC+ }
+txt        =  _{ (!NEWLINE ) ASCII_ALPHANUMERIC+ }
 
 var_type = { ("global" | "var" | "array" | "sub" | "person") }
 
@@ -17,11 +17,19 @@ variable_definition = { var_type ~ var_name ~ "=" ~ value }
 
 definition = { "!" ~ (variable_definition | version_declaration) ~ NEWLINE }
 
+// Object blocks:
 object_name  = { txt }
 object_lang  = { txt }
 object_close = { "< object" }
 body         = { (!object_close ~ ANY)+ }
-object_macro = { ">" ~ "object" ~ txt ~ txt ~ body ~ object_close }
+object_macro = { ">" ~ "object" ~ object_name ~ object_lang ~ body ~ object_close }
+
+// Begin blocks:
+begin_close = _{ "< begin" }
+body         = { (!begin_close ~ ANY)+ }
+begin_block = { ">" ~ "begin" ~ txt ~ txt ~ body ~ begin_close }
+
+
 
 weight = @{ "{weight=" ~ ASCII_DIGIT+ ~ "}" }
 
@@ -38,6 +46,8 @@ tag              = { "<" ~ (!">" ~ txt) ~ ">" }
 response_content = { (txt | tag)+ }
 response         = { "-" ~ response_content ~ weight? }
 
+
+previous = { "%" ~ response_content }
 previous = { "%" ~ trigger_content }
 
 operator    = { ("==" | "eq" | "!=" | "ne" | "<>" | "<=" | ">=" | "<" | ">") }
