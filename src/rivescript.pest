@@ -36,7 +36,7 @@ topic_name = { txt }
 
 
 
-weight = @{ "{weight=" ~ ASCII_DIGIT+ ~ "}" }
+
 
 trigger_txt         =  { (ASCII_ALPHA_LOWER | ASCII_DIGIT)+ }
 optional            =  { "[" ~ value ~ "]" }
@@ -47,7 +47,7 @@ wildcard            =  { "*" }
 trigger_content     =  { (trigger_txt | trigger_alternation | wildcard | optional)+ }
 trigger             =  { "+" ~ trigger_content }
 
-tag              = { "<" ~ (!">" ~ txt) ~ ">" }
+
 response_content = { (txt | tag)+ }
 response         = { "-" ~ response_content ~ weight? }
 
@@ -57,3 +57,24 @@ previous = { "%" ~ trigger_content }
 
 operator    = { ("==" | "eq" | "!=" | "ne" | "<>" | "<=" | ">=" | "<" | ">") }
 conditional = { "*" ~ (tag | value) ~ operator ~ (tag | value) }
+
+
+// Tags...
+tag = { (variable_tag|template_tag|format_tag) }
+
+template_tag = {"<" ~ template_tag_name ~ ">"}
+numbered = _{ ("botstar" | "star" | "input") ~ ASCII_NONZERO_DIGIT} 
+template_tag_name = {(numbered|"id"|"bot"|"env"|"person"|"formal"|"sentence"|uppercase"|"lowercase")}
+
+operation = {("get"|"set"|"add"|"sub"|"mult"|"div")}
+variable_tag = {"<" ~ operation ~ " " ~ var_name ~ "=" ~ value ~ ">"}
+
+topic =  @{"{topic=" ~ ASCII_ALPHANUMERIC+ ~ "}" }
+weight = @{ "{weight=" ~ ASCII_DIGIT+ ~ "}" }
+
+
+
+
+
+ok = { "{ok}" }
+formal = { "<formal>" }
