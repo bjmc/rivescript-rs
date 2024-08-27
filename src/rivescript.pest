@@ -1,11 +1,10 @@
 // Parsing Expression Grammar for RiveScript
-// Based on RiveScript 2.00 Working Draft (2009/07/30)
+// Based on RiveScript 2.00 Working Draft (2013/06/13)
 // https://www.rivescript.com/wd/RiveScript
 
-file            = { SOI ~ (statement | blank_line)+ ~ EOI }
-statement       = { (block_statement | line_statement) }
-block_statement = { (begin_block | topic_block | object_macro) }
-line_statement  = { (definition | previous | trigger | response) ~ EOL }
+file      = { SOI ~ (statement | blank_line)+ ~ EOI }
+statement = { (block | definition) }
+block     = { (begin_block | topic_block | object_macro | trigger_response_block) }
 
 // Atoms:
 WHITESPACE = _{ " " }
@@ -26,14 +25,17 @@ version_number      =  { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+){, 2} }
 version_declaration =  { "version" ~ "=" ~ version_number }
 variable_definition =  { var_type ~ var_name ~ "=" ~ value }
 
-// Blocks...
+// Label blocks...
 begin_block  = { ">" ~ "begin" ~ body ~ "<" ~ "begin" }
 topic_block  = { ">" ~ "topic" ~ topic_name ~ body ~ "<" ~ "topic" }
 object_macro = { ">" ~ "object" ~ object_name ~ object_lang ~ body ~ "<" ~ "object" }
-body         = { !"<" ~ line_statement* }
+body         = { !"<" ~ trigger_response_block* }
 object_name  = { txt }
 object_lang  = { txt }
 topic_name   = { txt }
+
+// Triggers & responses...
+trigger_response_block = { trigger ~ continue? ~ (response ~ EOL)+ }
 
 trigger_txt         = _{ (ASCII_ALPHA_LOWER | ASCII_DIGIT)+ }
 optional            =  { "[" ~ value ~ "]" }
@@ -42,12 +44,12 @@ inline_alternatives =  { trigger_txt ~ ("|" ~ trigger_txt)* }
 trigger_alternation =  { "(" ~ (array_ref | inline_alternatives) ~ ")" }
 wildcard            =  { "*" }
 trigger_content     =  { (trigger_txt | trigger_alternation | wildcard | optional)+ }
-trigger             =  { "+" ~ trigger_content }
+trigger             =  { "+" ~ trigger_content ~ EOL }
 
 response_content = { (txt | tag)+ }
-response         = { "-" ~ response_content ~ weight? }
+response         = { "-" ~ response_content ~ weight? ~ EOL }
 
-previous = { "%" ~ response_content }
+previous = { "%" ~ response_content ~ EOL }
 
 operator    = { ("==" | "eq" | "!=" | "ne" | "<>" | "<=" | ">=" | "<" | ">") }
 conditional = { "*" ~ (tag | value) ~ operator ~ (tag | value) }
