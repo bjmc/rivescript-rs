@@ -407,6 +407,7 @@ dependencies = [
  "pest",
  "pest-test",
  "pest-test-gen",
+ "pest_derive",
  "regex",
  "structopt",
 ]

@@ -1,18 +1,17 @@
-use std::env;
-use std::fs;
 use pest::Parser;
 use pest_derive::Parser;
+#[cfg(test)]
 use pest_test_gen::pest_tests;
 
-
-mod rivescript {
+pub mod rivescript {
     #[derive(pest_derive::Parser)]
     #[grammar = "rivescript.pest"]
-    pub struct Parser;
+    pub struct OurParser;
 }
 
+
 #[pest_tests(
-  super::rivescript::Parser,
+  super::rivescript::OurParser,
   super::rivescript::Rule,
   "file",
   ext = "test",

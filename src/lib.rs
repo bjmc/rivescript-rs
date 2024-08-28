@@ -6,7 +6,7 @@
 //! language author.
 
 use crate::ast::AST;
-use crate::parser::Parser;
+use crate::parser::rivescript::OurParser;
 use log::{debug, warn};
 use std::{error::Error, fs, string};
 use Result::Ok;
@@ -27,7 +27,7 @@ pub struct RiveScript {
     pub utf8: bool,
     pub depth: i32,
 
-    parser: Parser,
+    parser: OurParser,
     brain: AST,
 }
 
@@ -43,7 +43,7 @@ impl RiveScript {
             debug: false,
             utf8: false,
             depth: 50,
-            parser: Parser::new(),
+            parser: OurParser,
             brain: AST::new(),
         }
     }
@@ -121,8 +121,8 @@ impl RiveScript {
 
     // Internal, centralized funnel to load a RiveScript document.
     fn _stream(&mut self, filename: &str, source: String) -> Result<bool, Box<dyn Error>> {
-        let ast = self.parser.parse(filename, source)?;
-        self.brain.extend(ast);
+        //let ast = self.parser.parse(filename, source)?;
+        //self.brain.extend(ast);
         Ok(true)
     }
 
