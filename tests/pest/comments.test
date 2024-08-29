@@ -1,0 +1,21 @@
+Comments: Should be ignored.
+====================================
+// This is the simple trigger again
++ hello bot    // What the human says
+- Hello human! // How the bot responds
+
+====================================
+(file
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "hello bot  //")
+        )
+        (response
+          (response_content: "Hello human!")
+        )
+      )
+    )
+  )
+)
