@@ -8,11 +8,11 @@ block     = { (begin_block | topic_block | object_macro | trigger_response_block
 
 // Atoms:
 WHITESPACE = _{ " " }
-COMMENT    = _{ ("/*" ~ (!"*/" ~ ANY)* ~ "*/") | "//" }
+COMMENT    = _{ ("/*" ~ (!"*/" ~ ANY)* ~ "*/") | ("//" ~ (!NEWLINE ~ ANY)* ) }
 continue   = _{ NEWLINE ~ "^" }
 blank_line = _{ NEWLINE }
 EOL        = _{ !continue ~ NEWLINE }
-special    =  { ("{" | "<") }
+special    =  { ("{" | "<" | "//" | "/*") }
 txt        = _{ !(EOL | special) ~ ASCII }
 
 // Defintions:
@@ -37,7 +37,7 @@ topic_name   = { txt }
 // Triggers & responses...
 trigger_response_block = { trigger ~ continue? ~ (response)+ }
 
-trigger_txt         = _{ (ASCII_ALPHA_LOWER | ASCII_DIGIT)+ }
+trigger_txt         = _{ !(EOL | special) ~ (ASCII_ALPHA_LOWER | ASCII_DIGIT)+ }
 optional            =  { "[" ~ value ~ "]" }
 array_ref           = ${ "@" ~ txt }
 inline_alternatives =  { trigger_txt ~ ("|" ~ trigger_txt)* }

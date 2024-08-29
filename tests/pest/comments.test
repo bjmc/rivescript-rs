@@ -1,6 +1,9 @@
 Comments: Should be ignored.
 ====================================
 // This is the simple trigger again
+/*
+  Block comments are ignored too.
+*/
 + hello bot    // What the human says
 - Hello human! // How the bot responds
 
@@ -10,7 +13,7 @@ Comments: Should be ignored.
     (block
       (trigger_response_block
         (trigger
-          (trigger_content: "hello bot  //")
+          (trigger_content: "hello bot")
         )
         (response
           (response_content: "Hello human!")
