@@ -35,14 +35,14 @@ object_lang  = { txt }
 topic_name   = { txt }
 
 // Triggers & responses...
-trigger_response_block = { trigger ~ continue? ~ (response ~ EOL)+ }
+trigger_response_block = { trigger ~ continue? ~ (response)+ }
 
 trigger_txt         = _{ (ASCII_ALPHA_LOWER | ASCII_DIGIT)+ }
 optional            =  { "[" ~ value ~ "]" }
 array_ref           = ${ "@" ~ txt }
 inline_alternatives =  { trigger_txt ~ ("|" ~ trigger_txt)* }
 trigger_alternation =  { "(" ~ (array_ref | inline_alternatives) ~ ")" }
-wildcard            =  { "*" }
+wildcard            =  { ("*" | "_" | "#") }
 trigger_content     =  { (trigger_txt | trigger_alternation | wildcard | optional)+ }
 trigger             =  { "+" ~ trigger_content ~ EOL }
 
