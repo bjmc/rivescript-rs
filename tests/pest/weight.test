@@ -1,0 +1,39 @@
+Replies with weight
+===============================================
++ hello bot
+- Hello human!
+- Hello!{weight=5}
+- Hi there!
+- Hey!{weight=5}
+- Hi!{weight=10}
+
+===============================================
+(file
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "hello bot")
+        )
+        (response
+          (response_content: "Hello human!")
+        )
+        (response
+          (response_content: "Hello!")
+          (weight: "{weight=5}")
+        )
+        (response
+          (response_content: "Hi there!")
+        )
+        (response
+          (response_content: "Hey!")
+          (weight: "{weight=5}")
+        )
+        (response
+          (response_content: "Hi!")
+          (weight: "{weight=10}")
+        )
+      )
+    )
+  )
+)
