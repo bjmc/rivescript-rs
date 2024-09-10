@@ -1,5 +1,5 @@
-use pest::Parser;
-use pest_derive::Parser;
+
+
 #[cfg(test)]
 use pest_test_gen::pest_tests;
 
@@ -8,6 +8,7 @@ pub mod rivescript {
     #[grammar = "rivescript.pest"]
     pub struct OurParser;
 }
+
 
 #[pest_tests(
   super::rivescript::OurParser,

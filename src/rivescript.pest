@@ -58,7 +58,7 @@ conditional = { "*" ~ (tag | value) ~ operator ~ (tag | value) }
 tag = { (variable_tag | template_tag | format_tag) }
 
 template_tag      =  { "<" ~ template_tag_name ~ ">" }
-numbered          = _{ ("botstar" | "star" | "input") ~ ASCII_NONZERO_DIGIT }
+numbered          = _{ ("botstar" | "star" | "input") ~ ASCII_NONZERO_DIGIT? }
 template_tag_name =  { (numbered | format_tag_name | "id" | "bot" | "env" | "@") }
 
 operation    = { ("get" | "set" | "add" | "sub" | "mult" | "div") }
