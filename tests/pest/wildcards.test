@@ -44,6 +44,7 @@ Wildcard variations
     (block
       (trigger_response_block
         (trigger
+          (trigger_content: "my name is")
           (trigger_content
             (wildcard: "_")
           )
@@ -82,6 +83,7 @@ Wildcard variations
     (block
       (trigger_response_block
         (trigger
+          (trigger_content: "my name is")
           (trigger_content
             (wildcard: "#")
           )
@@ -120,6 +122,7 @@ Wildcard variations
     (block
       (trigger_response_block
         (trigger
+          (trigger_content: "my name is")
           (trigger_content
             (wildcard: "*")
           )
@@ -134,9 +137,11 @@ Wildcard variations
     (block
       (trigger_response_block
         (trigger
+          (trigger_content: "i am")
           (trigger_content
             (wildcard: "#")
           )
+          (trigger_content: "years old")
         )
         (response
           (response_content
@@ -154,9 +159,11 @@ Wildcard variations
     (block
       (trigger_response_block
         (trigger
+          (trigger_content: "i am")
           (trigger_content
             (wildcard: "_")
           )
+          (trigger_content: "years old")
         )
         (response
           (response_content: "Can you say that again using a number?")
@@ -168,9 +175,11 @@ Wildcard variations
     (block
       (trigger_response_block
         (trigger
+          (trigger_content: "i am")
           (trigger_content
             (wildcard: "*")
           )
+          (trigger_content: "years old")
         )
         (response
           (response_content: "You told me numbers and letters? Tell me only numbers.")
@@ -182,6 +191,7 @@ Wildcard variations
     (block
       (trigger_response_block
         (trigger
+          (trigger_content: "i am from")
           (trigger_content
             (wildcard: "*")
           )
@@ -204,6 +214,9 @@ Wildcard variations
         (trigger
           (trigger_content
             (wildcard: "_")
+          )
+          (trigger_content: "told me to say")
+          (trigger_content
             (wildcard: "*")
           )
         )

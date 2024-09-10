@@ -9,7 +9,6 @@ pub mod rivescript {
     pub struct OurParser;
 }
 
-
 #[pest_tests(
   super::rivescript::OurParser,
   super::rivescript::Rule,

@@ -1,0 +1,145 @@
+Alternation
+===============================================
++ what is your (home|office|cell) phone number
+- You can call my <star> number at 1 (888) 555-5555.
+
++ i (can not|cannot) *
+- Have you tried?
+- Why can't you <star2>?
+- Do you really want to <star2>?
+
++ who (is your master|made you|created you|programmed you)
+- I was developed by a RiveScript coder; you don't need to know his name!
+
++ (what is your name|who are you|who is this)
+- My name is Aiden, I'm a chatterbot running on RiveScript!
+
++ (happy|merry) (christmas|xmas|valentines day|thanksgiving)
+- Wow! Is it really <star2> already?
+
+
+===============================================
+(file
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "what is your")
+          (trigger_content
+            (trigger_alternation
+              (inline_alternatives: "home|office|cell")
+            )
+          )
+          (trigger_content: "phone number")
+        )
+        (response
+          (response_content
+            (tag
+              (template_tag
+                (template_tag_name: "star")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "i ")
+          (trigger_content
+            (trigger_alternation
+              (inline_alternatives: "can not|cannot")
+            )
+          )
+          (trigger_content
+            (wildcard: "*")
+          )
+        )
+        (response
+          (response_content: "Have you tried?")
+        )
+        (response
+          (response_content
+            (tag
+              (template_tag
+                (template_tag_name: "star2")
+              )
+            )
+          )
+        )
+        (response
+          (response_content
+            (tag
+              (template_tag
+                (template_tag_name: "star2")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "who")
+          (trigger_content
+            (trigger_alternation
+              (inline_alternatives: "is your master|made you|created you|programmed you")
+            )
+          )
+        )
+        (response
+          (response_content: "I was developed by a RiveScript coder; you don\'t need to know his name!")
+        )
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content
+            (trigger_alternation
+              (inline_alternatives: "what is your name|who are you|who is this")
+            )
+          )
+        )
+        (response
+          (response_content: "My name is Aiden, I\'m a chatterbot running on RiveScript!")
+        )
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content
+            (trigger_alternation
+              (inline_alternatives: "happy|merry")
+            )
+          )
+          (trigger_content
+            (trigger_alternation
+              (inline_alternatives: "christmas|xmas|valentines day|thanksgiving")
+            )
+          )
+        )
+        (response
+          (response_content
+            (tag
+              (template_tag
+                (template_tag_name: "star2")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
