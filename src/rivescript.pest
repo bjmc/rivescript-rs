@@ -43,8 +43,8 @@ array_ref           = ${ "@" ~ txt }
 inline_alternatives =  { trigger_txt ~ ("|" ~ trigger_txt)* }
 trigger_alternation =  { "(" ~ (array_ref | inline_alternatives) ~ ")" }
 wildcard            =  { ("*" | "_" | "#") }
-trigger_content     =  { (trigger_txt | trigger_alternation | wildcard | optional)+ }
-trigger             =  { "+" ~ trigger_content ~ EOL }
+trigger_content     =  { (trigger_txt | trigger_alternation | wildcard | optional) }
+trigger             =  { "+" ~ trigger_content+ ~ EOL }
 
 response_content = { (txt | tag)+ }
 response         = { "-" ~ response_content ~ weight? ~ EOL }
