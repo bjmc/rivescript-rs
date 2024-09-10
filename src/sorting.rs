@@ -4,7 +4,7 @@ use itertools::Itertools;
 use log::{debug, warn};
 
 use crate::{ast, regex, errors::ParseError};
-use std::{collections::HashMap, error::Error};
+use std::{collections::HashMap};
 
 struct SortTracker {
     atomic: HashMap<i32, Trigger>, // Sort atomic triggers by number of whole words
@@ -25,7 +25,7 @@ struct Trigger {
 /// Process the parsed AST of your bot and create optimal sort buffers
 /// for trigger texts (with longer, more specific triggers on top and
 /// ones with wildcards below).
-pub fn sort_triggers(mut brain: &ast::AST) -> Result<bool, ParseError> {
+pub fn sort_triggers(brain: &ast::AST) -> Result<bool, ParseError> {
     let mut sorted_topics: HashMap<String, Vec<Trigger>> = HashMap::new();
 
     // If there are no topics, give an error.

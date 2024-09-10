@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use log::warn;
+
 
 /// Root of the "abstract syntax tree" representing a RiveScript
 /// source document and its useful contents.

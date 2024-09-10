@@ -8,7 +8,7 @@
 use crate::ast::AST;
 use crate::parser::rivescript::OurParser;
 use log::{debug, warn};
-use std::{error::Error, fs, string};
+use std::{error::Error, fs};
 use Result::Ok;
 
 mod ast;
@@ -120,7 +120,7 @@ impl RiveScript {
     }
 
     // Internal, centralized funnel to load a RiveScript document.
-    fn _stream(&mut self, filename: &str, source: String) -> Result<bool, Box<dyn Error>> {
+    fn _stream(&mut self, _filename: &str, _source: String) -> Result<bool, Box<dyn Error>> {
         //let ast = self.parser.parse(filename, source)?;
         //self.brain.extend(ast);
         Ok(true)
