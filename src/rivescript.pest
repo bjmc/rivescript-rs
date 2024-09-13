@@ -8,7 +8,7 @@ block     = { (begin_block | topic_block | object_macro | trigger_response_block
 
 // Atoms:
 WHITESPACE = _{ " " }
-COMMENT    = _{ ("/*" ~ (!"*/" ~ ANY)* ~ "*/") | ("//" ~ (!NEWLINE ~ ANY)* ) }
+COMMENT    = _{ ("/*" ~ (!"*/" ~ ANY)* ~ "*/") | ("//" ~ (!NEWLINE ~ ANY)*) }
 continue   = _{ NEWLINE ~ "^" }
 blank_line = _{ NEWLINE }
 EOL        = _{ !continue ~ NEWLINE }
@@ -26,13 +26,16 @@ version_declaration =  { "version" ~ "=" ~ version_number }
 variable_definition =  { var_type ~ var_name ~ "=" ~ value }
 
 // Label blocks...
-begin_block  = { ">" ~ "begin" ~ body ~ "<" ~ "begin" }
-topic_block  = { ">" ~ "topic" ~ topic_name ~ body ~ "<" ~ "topic" }
-object_macro = { ">" ~ "object" ~ object_name ~ object_lang ~ body ~ "<" ~ "object" }
-body         = { !"<" ~ trigger_response_block* }
-object_name  = { txt }
-object_lang  = { txt }
-topic_name   = { txt }
+begin_block  =  { ">" ~ "begin" ~ body ~ "<" ~ "begin" }
+topic_block  =  { ">" ~ "topic" ~ topic_name ~ body ~ "<" ~ "topic" }
+object_start =  { ">" ~ "object" ~ object_name ~ object_lang }
+object_end   = _{ "< object" }
+object_body  =  { (!object_end ~ ANY)* }
+object_macro =  { object_start ~ object_body ~ object_end }
+body         =  { !"<" ~ trigger_response_block* }
+object_name  = @{ (!WHITESPACE ~ txt)+ }
+object_lang  = @{ (!WHITESPACE ~ txt)+ }
+topic_name   = @{ !WHITESPACE ~ txt+ }
 
 // Triggers & responses...
 trigger_response_block = { trigger ~ continue? ~ (response)+ }
@@ -43,7 +46,7 @@ array_ref           = ${ "@" ~ txt }
 inline_alternatives =  { trigger_txt ~ ("|" ~ trigger_txt)* }
 trigger_alternation =  { "(" ~ (array_ref | inline_alternatives) ~ ")" }
 wildcard            =  { ("*" | "_" | "#") }
-trigger_content     =  { (trigger_txt | trigger_alternation | wildcard | optional) }
+trigger_content     =  { (trigger_txt | trigger_alternation | optional | wildcard) }
 trigger             =  { "+" ~ trigger_content+ ~ EOL }
 
 response_content = { (txt | tag)+ }
@@ -57,9 +60,9 @@ conditional = { "*" ~ (tag | value) ~ operator ~ (tag | value) }
 // Tags...
 tag = { (variable_tag | template_tag | format_tag) }
 
-template_tag      =  { "<" ~ template_tag_name ~ ">" }
+template_tag      =  { "<" ~ "/"? ~ template_tag_name ~ ">" }
 numbered          = _{ ("botstar" | "star" | "input") ~ ASCII_NONZERO_DIGIT? }
-template_tag_name =  { (numbered | format_tag_name | "id" | "bot" | "env" | "@") }
+template_tag_name =  { (numbered | format_tag_name | "call" | "id" | "bot" | "env" | "@") }
 
 operation    = { ("get" | "set" | "add" | "sub" | "mult" | "div") }
 variable_tag = { "<" ~ operation ~ " " ~ var_name ~ "=" ~ value ~ ">" }
