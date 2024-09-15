@@ -1,0 +1,142 @@
+Command Testing
+===============================================
+
+/* %Previous
+   ---------
+   Human says:     Knock, knock.
+   Expected reply: Who's there?
+   Human says:     Banana.
+   Expected reply: Banana who?
+   Human says:     Knock, knock.
+   Expected reply: Who's there?
+   Human says:     Banana.
+   Expected reply: Banana who?
+   Human says:     Knock, knock.
+   Expected reply: Who's there?
+   Human says:     Orange.
+   Expected reply: Orange who?
+   Human says:     Orange you glad I didn't say banana?
+   Expected reply: Haha! "Orange you glad I didn't say banana"! :D
+*/
++ knock knock
+- Who's there?
+
++ *
+% who is there
+- <set joke=<star>><sentence> who?
+
++ <get joke> *
+- Haha! "{sentence}<get joke> <star>{/sentence}"! :D
+
+/* ^Continue
+   ---------
+   Human says:     Tell me a poem
+   Expected reply: Little Miss Muffit sat on her tuffet
+                     in a nonchalant sort of way.
+                     With her forefield around her,
+                     the Spider, the bounder,
+                     Is not in the picture today.
+*/
++ tell me a poem
+- Little Miss Muffit sat on her tuffet\n
+^ in a nonchalant sort of way.\n
+^ With her forcefield around her,\n
+^ the Spider, the bounder,\n
+^ Is not in the picture today.
+
+/* @Redirect
+   ---------
+   Human says:     Who are you?
+   Expected reply: You can call me RiveScript Test Bot.
+*/
++ who are you
+@ what is your name
+
+/* @Redirect
+   ---------
+   Human says:     Test recursion
+   Expected reply: ERR: Deep Recursion Detected!
+*/
++ test recursion
+@ test more recursion
+
++ test more recursion
+@ test recursion
+
+/* Conditionals
+   ------------
+   Human says:     What am I old enough to do?
+   Expected reply: You never told me how old you are.
+                   You're too young to do much of anything.
+                   You're over 18 so you can gamble.
+                   You're over 21 so you can drink.
+*/
++ what am i old enough to do
+* <get age> == undefined => You never told me how old you are.
+* <get age> >= 21        => You're over 21 so you can drink.
+* <get age> >= 18        => You're over 18 so you can gamble.
+* <get age> <  18        => You're too young to do much of anything.
+- This reply shouldn't happen.
+
+/* Conditionals
+   ------------
+   Human says:     Am I 18 years old?
+   Expected reply: I don't know how old you are.
+                   You're not 18, no.
+                   Yes, you are.
+*/
++ am i 18 years old
+* <get age> == undefined => I don't know how old you are.
+* <get age> != 18        => You're not 18, no.
+- Yes, you are.
+
+/* Conditionals
+   ------------
+   Human says:     Count.
+   Expected reply: Let's start with 1.
+   Human says:     Count.
+   Expected reply: I've added 1 to the count.
+   Human says:     Count.
+   Expected reply: I've added 5 now.
+   Human says:     Count.
+   Expected reply: Subtracted 2.
+   Human says:     Count.
+   Expected reply: Now I've doubled that.
+   Human says:     Count.
+   Expected reply: Subtracted 2 from that now.
+   Human says:     Count.
+   Expected reply: Divided that by 2.
+   Human says:     Count.
+   Expected reply: Subtracted 1.
+   Human says:     Count.
+   Expected reply: Now I've added 3.
+   Human says:     Count.
+   Expected reply: Added 3 again.
+   Human says:     Count.
+   Expected reply: We're done. Do you know what number I stopped at?
+   Human says:     9
+   Expected reply: You're right, I stopped at the number 9. :)
+*/
++ count
+* <get count> == undefined => <set count=1>Let's start with 1.
+* <get count> == 0         => <set count=1>Let's start again with 1.
+* <get count> == 1         => <add count=1>I've added 1 to the count.
+* <get count> == 2         => <add count=5>I've added 5 now.
+* <get count> == 3         => <add count=3>Now I've added 3.
+* <get count> == 4         => <sub count=1>Subtracted 1.
+* <get count> == 5         => <mult count=2>Now I've doubled that.
+* <get count> == 6         => <add count=3>Added 3 again.
+* <get count> == 7         => <sub count=2>Subtracted 2.
+* <get count> == 8         => <div count=2>Divided that by 2.
+* <get count> == 9         => <set count=0>We're done. Do you know what number I
+  ^ \sstopped at?
+* <get count> == 10        => <sub count=2>Subtracted 2 from that now.
+
++ (9|nine)
+% * do you know what number i stopped at
+- You're right, I stopped at the number 9. :)
+
+===============================================
+(file
+)
+

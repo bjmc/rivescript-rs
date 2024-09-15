@@ -1,0 +1,46 @@
+Object Macro Tests
+===============================================
+
+/* Encoding Object
+   ---------------
+   Human says:     Encode something in MD5.
+   Expected reply: "something" in MD5 is: 437b930db84b8079c2dd804a71936b5f
+   Human says:     Encode something in Base64.
+   Expected reply: "something" in Base64 is: c29tZXRoaW5n
+*/
+
+> object encode perl
+	my ($rs,$method,@args) = @_;
+	my $msg = join(" ",@args);
+
+	use Digest::MD5 qw(md5_hex);
+	use MIME::Base64 qw(encode_base64);
+
+	if ($method eq "md5") {
+		return md5_hex($msg);
+	}
+	else {
+		return encode_base64($msg);
+	}
+< object
+
++ encode * in md5
+- "<star>" in MD5 is: <call>encode md5 <star></call>
+
++ encode * in base64
+- "<star>" in Base64 is: <call>encode base64 <star></call>
+
+> object testing javascript
+	var w = screen.width;
+	var h = screen.height;
+	var dim = w + "x" + h;
+	return dim;
+< object
+
++ test javascript
+- Testing javascript... <call>testing</call>.
+
+===============================================
+(file
+)
+

@@ -1,0 +1,56 @@
+Basic Reply Testing  
+===============================================
+
+/* Atomic Response
+   ---------------
+   Human says:     how are you
+   Expected reply: I'm great.
+*/
++ how are you
+- I'm great.
+
+/* Random Response
+   ---------------
+   Human says:     hello
+                   hi
+                   hey
+   Expected reply: Hey there!
+                   Hello!
+                   Hi!
+*/
++ (hello|hi|hey)
+- Hey there!
+- Hello!
+- Hi!
+
+/* Random Response
+   ---------------
+   Human says:     my name is Casey
+   Expected reply: Nice to meet you, Casey.
+                   Hi, Casey, my name is RiveScript Test Bot.
+                   Casey, nice to meet you.
+   Extra notes:    This would also set the var name=Casey for the user.
+*/
++ my name is *
+- <set name=<formal>>Nice to meet you, <formal>.
+- <set name=<formal>>Hi, <formal>, my name is <bot name>.
+- <set name=<formal>><formal>, nice to meet you.
+
+/* Weighted Random Response
+   ------------------------
+   Human says:     Tell me a secret
+   Expected reply: I won't tell you a secret.
+                   You can't handle a secret.
+                   Okay, here's a secret... nope, just kidding.
+                   Actually, I just don't have any secrets.
+*/
++ tell me a secret
+- I won't tell you a secret.{weight=20}
+- You can't handle a secret.{weight=20}
+- Okay, here's a secret... nope, just kidding.{weight=5}
+- Actually, I just don't have any secrets.
+
+===============================================
+(file
+)
+

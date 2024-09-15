@@ -1,0 +1,127 @@
+Topics testing
+===============================================
+
+
+ ! global topics = hello world
+
+ + test global
+ - Testing reserved global: topics=<env topics>; users=<env users>; client=<env client>; reserved=<env reserved>.
+
+/*
+    Temporarily ignoring abusive users
+    ----------------------------------
+    Human says:     insert swear word here
+    Expected reply: Omg you're mean! I'm not talking to you until you apologize.
+    Human says:     (anything)
+    Expected reply: Not until you apologize.
+                    Say you're sorry.
+                    Apologize for being so mean.
+    Human says:     sorry
+    Expected reply: Okay, I'll forgive you.
+*/
+
++ insert swear word here
+- Omg you're mean! I'm not talking to you until you apologize.{topic=apology}
+
+> topic apology
+	+ *
+	- Not until you apologize.
+	- Say you're sorry.
+	- Apologize for being so mean.
+
+	+ [*] (sorry|apologize) [*]
+	- Okay, I'll forgive you.{topic=random}
+< topic
+
+/*
+    Topic Inheritence (simple roleplaying game)
+    -------------------------------------------
+    Human says:     enter the dungeon
+    Expected reply: (drops you into a mini game. Skim the code below to figure
+                    it out)
+*/
+
++ enter the dungeon
+- {topic=room1}You've entered the dungeon. {@look}
+
+> topic global
+	+ help{weight=100}
+	- Game Help (todo)
+
+	+ inventory{weight=100}
+	- Your Inventory (todo)
+
+	+ (north|n|south|s|east|e|west|w)
+	- You can't go in that direction.
+
+	+ quit{weight=100}
+	- {topic=random}Quitter!
+
+	+ _ *
+	- You don't need to use the word "<star>" in this game.
+
+	+ *
+	- I don't understand what you're saying. Try "help" or "quit".
+< topic
+
+> topic dungeon inherits global
+	+ hint
+	- What do you need a hint on?\n
+	^ * How to play\n
+	^ * About this game
+
+	+ how to play
+	% what do you need a hint *
+	- The commands are "help", "inventory", and "quit". Just read and type.
+
+	+ about this game
+	% what do you need a hint *
+	- This is just a sample RPG game to demonstrate topic inheritence.
+< topic
+
+> topic room1 inherits dungeon
+	+ look
+	- You're in a room with a large number "1" on the floor.\s
+	^ Exits are north and east.
+
+	+ (north|n){weight=5}
+	- {topic=room2}{@look}
+
+	+ (east|e){weight=5}
+	- {topic=room3}{@look}
+< topic
+
+> topic room2 inherits dungeon
+	+ look
+	- This room has the number "2" here. There's a flask here that's trapped
+	^ \sin some kind of mechanism that only opens while the button is held
+	^ \sdown (so, hold down the button then quickly grab the flask).\n\n
+	^ The only exit is to the south.
+
+	+ [push|press|hold] button [*]
+	- You press down on the button and the mechanism holding the flask is\s
+	^ unlocked.
+
+	+ [take|pick up] [ye] flask [*]
+	% * mechanism holding the flask is unlocked
+	- You try to take ye flask but fail (you can't take ye flask, give up).
+
+	+ [take|pick up] [ye] flask [*]
+	- You can't get ye flask while the mechanism is holding onto it.
+
+	+ (south|s){weight=5}
+	- {topic=room1}{@look}
+< topic
+
+> topic room3 inherits dungeon
+	+ look
+	- There's nothing here but the number "3". Only exit is to the west.
+
+	+ (west|w){weight=5}
+	- {topic=room1}{@look}
+< topic
+
+===============================================
+(file
+)
+

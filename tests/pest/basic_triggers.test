@@ -1,0 +1,214 @@
+Basic Trigger Testing
+===============================================
+/* Atomic Reply
+   ------------
+   Human says:     hello bot
+   Expected reply: Hello human.
+*/
++ hello bot
+- Hello human.
+
+/* Atomic Reply
+   ------------
+   Human says:     what is your name
+   Expected reply: You can call me RiveScript Test Bot.
+*/
++ what is your name
+- You can call me <bot name>.
+
+/* Wildcards
+   ---------
+   Human says:     my favorite thing in the world is programming
+   Expected reply: Why do you like programming so much?
+*/
++ my favorite thing in the world is *
+- Why do you like <star> so much?
+
+/* Wildcards
+   ---------
+   Human says:     John told me to say hello
+   Expected reply: Why would john have told you to say hello?
+*/
++ * told me to say *
+- Why would <star1> have told you to say <star2>?
+
+/* Wildcards
+   ---------
+   Human says:     I think the sky is orange.
+   Expected reply: Do you think the sky is orange a lot?
+*/
++ i think *
+- Do you think <star> a lot?
+
+/* Wildcards
+   ---------
+   Human says:     I am twenty years old
+   Expected reply: Tell me that as a number instead of spelled out like "twenty"
+   Extra Notes:    When multiple triggers exist that are identical except for
+                   their wildcard character, the order of priorities are that
+                   _ is always first, # is second, and * last. So in this code
+                   and the following one, the "i am # years old" should match
+                   if the wildcard is a number and the "i am * years old" should
+                   only match otherwise.
+*/
++ i am * years old
+- Tell me that as a number instead of spelled out like "<star>".
+
+/* Wildcards
+   ---------
+   Human says:     I am 20 years old
+   Expected reply: I will remember that you are 20 years old.
+   Extra Notes:    This reply should also set the var "age" to 20 for this user.
+*/
++ i am # years old
+- <set age=<star>>I will remember that you are <star> years old.
+
+/* Alternations
+   ------------
+   Human says:     What is your home phone number?
+   Expected reply: You can call me at my home number, 555-1234.
+   Human says:     What is your office phone number?
+   Expected reply: You can call me at my office number, 555-1234.
+   Human says:     What is your work phone number?
+   Expected reply: You can call me at my work number, 555-1234.
+   Human says:     What is your cell phone number?
+   Expected reply: You can call me at my cell number, 555-1234.
+*/
++ what is your (home|office|work|cell) phone number
+- You can call me at my <star> number, <bot phone>.
+
+/* Alternations
+   ------------
+   Human says:     Are you okay?
+                   Are you alright?
+                   You okay?
+                   You alright?
+   Expected reply: I'm fine, thanks for asking.
+*/
++ (are you|you) (okay|alright)
+- I'm fine, thanks for asking.
+
+/* Optionals
+   ---------
+   Human says:     How can I contact you?
+                   Can I contact you?
+   Expected reply: You can have my phone number: 555-1234.
+*/
++ [how] can i contact you
+- You can have my phone number: <bot phone>.
+
+/* Optionals
+   ---------
+   Human says:     Do you have an email address?
+                   You have an email address?
+                   Do you have an email?
+                   You have an email?
+                   Do you have email?
+                   You have email?
+   Expected reply: You can e-mail me at test@mydomain.com.
+*/
++ [do] you have [an] email [address]
+- You can e-mail me at <bot email>.
+
+/* Optionals
+   ---------
+   Human says:     Tell me your phone number
+                   Tell me your number
+                   Tell me your home phone number
+                   Tell me your home number
+                   Tell me your office phone number
+                   Tell me your office number
+                   Tell me your work phone number
+                   Tell me your work number
+                   Tell me your cell phone number
+                   Tell me your cell number
+   Expected reply: My phone number is 555-1234.
+*/
++ tell me your [home|office|work|cell] [phone] number
+- My phone number is <bot phone>.
+
+/* Arrays
+   ------
+   Human says:     What color is my blue shirt?
+   Expected reply: Your shirt is blue, silly.
+   Human says:     What color is my light red shirt?
+   Expected reply: Your shirt is light red, silly.
+   Human says:     What color is my black shirt?
+   Expected reply: Your shirt is black, silly.
+*/
++ what color is my (@colors) shirt
+- Your shirt is <star>, silly.
+
+/* Arrays
+   ------
+   Human says:     What color was George Washington's white horse?
+   Expected reply: George Washingtons horse was white.
+*/
++ what color was * (@colors) *
+- <formal> <star3> was <star2>.
+
+/* Arrays
+   ------
+   Human says:     I have a yellow sports car
+   Expected reply: Why did you choose that color for a sports car?
+*/
++ i have a @colors *
+- Why did you choose that color for a <star>?
+
+/* Priority Triggers
+   -----------------
+   Human says:     I have a black davenport
+   Expected reply: That's a word that's not used much anymore.
+   Extra notes:    This would normally match the trigger above, but this one has
+                   a high priority and matches first, even though the trigger
+                   above has more words and is a more specific match.
+*/
++ {weight=100}* davenport
+- That's a word that's not used much anymore.
+
+===============================================
+(file
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "hello bot")
+        )
+        (response
+          (response_content: "Hello human!")
+        )
+        (response
+          (response_content: "Hello!")
+        )
+        (response
+          (response_content: "Hi there!")
+        )
+        (response
+          (response_content: "Hey!")
+        )
+        (response
+          (response_content: "Hi!")
+        )
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "goodbye bot")
+        )
+        (response
+          (response_content: "bye")
+        )
+        (response
+          (response_content: "ciao!")
+        )
+        (response
+          (response_content: "good riddance")
+        )
+      )
+    )
+  )
+)
+
