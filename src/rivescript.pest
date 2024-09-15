@@ -19,7 +19,7 @@ txt        = _{ !(EOL | special) ~ ASCII }
 definition          =  { "!" ~ (variable_definition | version_declaration) }
 inline_definition   = @{ "{" ~ definition ~ "}" }
 var_type            =  { ("global" | "var" | "array" | "sub" | "person") }
-var_name            =  { txt }
+var_name            =  { (ASCII_ALPHA | "_")+ }
 value               =  { (!NEWLINE ~ ANY)* }
 version_number      =  { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+){, 2} }
 version_declaration =  { "version" ~ "=" ~ version_number }
@@ -58,14 +58,15 @@ operator    = { ("==" | "eq" | "!=" | "ne" | "<>" | "<=" | ">=" | "<" | ">") }
 conditional = { "*" ~ (tag | value) ~ operator ~ (tag | value) }
 
 // Tags...
-tag = { (variable_tag | template_tag | format_tag) }
+tag = { (variable_set_tag | variable_ref_tag | template_tag | format_tag) }
 
 template_tag      =  { "<" ~ "/"? ~ template_tag_name ~ ">" }
 numbered          = _{ ("botstar" | "star" | "input") ~ ASCII_NONZERO_DIGIT? }
-template_tag_name =  { (numbered | format_tag_name | "call" | "id" | "bot" | "env" | "@") }
+template_tag_name =  { (numbered | format_tag_name | "call" | "id" | "@") }
 
+variable_ref_tag = { "<" ~ ("bot" | "env") ~ var_name ~ ">"}
 operation    = { ("get" | "set" | "add" | "sub" | "mult" | "div") }
-variable_tag = { "<" ~ operation ~ " " ~ var_name ~ "=" ~ value ~ ">" }
+variable_set_tag = { "<" ~ operation ~ " " ~ var_name ~ "=" ~ value ~ ">" }
 
 topic  = @{ "{topic=" ~ ASCII_ALPHANUMERIC+ ~ "}" }
 weight = @{ "{weight=" ~ ASCII_DIGIT+ ~ "}" }

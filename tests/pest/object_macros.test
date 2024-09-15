@@ -42,5 +42,124 @@ Object Macro Tests
 
 ===============================================
 (file
+  (statement
+    (block
+      (object_macro
+        (object_start
+          (object_name: "encode")
+          (object_lang: "perl")
+        )
+        (object_body: "\n\tmy ($rs,$method,@args) = @_;\n\tmy $msg = join(\" \",@args);\n\n\tuse Digest::MD5 qw(md5_hex);\n\tuse MIME::Base64 qw(encode_base64);\n\n\tif ($method eq \"md5\") {\n\t\treturn md5_hex($msg);\n\t}\n\telse {\n\t\treturn encode_base64($msg);\n\t}\n")
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "encode")
+          (trigger_content
+            (wildcard: "*")
+          )
+          (trigger_content: "in md5")
+        )
+        (response
+          (response_content
+            (tag
+              (template_tag
+                (template_tag_name: "star")
+              )
+            )
+            (tag
+              (template_tag
+                (template_tag_name: "call")
+              )
+            )
+            (tag
+              (template_tag
+                (template_tag_name: "star")
+              )
+            )
+            (tag
+              (template_tag
+                (template_tag_name: "call")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "encode")
+          (trigger_content
+            (wildcard: "*")
+          )
+          (trigger_content: "in base64")
+        )
+        (response
+          (response_content
+            (tag
+              (template_tag
+                (template_tag_name: "star")
+              )
+            )
+            (tag
+              (template_tag
+                (template_tag_name: "call")
+              )
+            )
+            (tag
+              (template_tag
+                (template_tag_name: "star")
+              )
+            )
+            (tag
+              (template_tag
+                (template_tag_name: "call")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+  (statement
+    (block
+      (object_macro
+        (object_start
+          (object_name: "testing")
+          (object_lang: "javascript")
+        )
+        (object_body: "\n\tvar w = screen.width;\n\tvar h = screen.height;\n\tvar dim = w + \"x\" + h;\n\treturn dim;\n")
+      )
+    )
+  )
+  (statement
+    (block
+      (trigger_response_block
+        (trigger
+          (trigger_content: "test javascript")
+        )
+        (response
+          (response_content
+            (tag
+              (template_tag
+                (template_tag_name: "call")
+              )
+            )
+            (tag
+              (template_tag
+                (template_tag_name: "call")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
 )
 
