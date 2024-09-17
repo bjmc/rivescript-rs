@@ -58,22 +58,30 @@ operator    = { ("==" | "eq" | "!=" | "ne" | "<>" | "<=" | ">=" | "<" | ">") }
 conditional = { "*" ~ (tag | value) ~ operator ~ (tag | value) }
 
 // Tags...
-tag = { (variable_set_tag | variable_ref_tag | template_tag | format_tag) }
+format_tag_name =  { ("random" | "person" | "formal" | "sentence" | "uppercase" | "lowercase") }
+numbered_names  = _{ ("botstar" | "star" | "input") ~ ASCII_NONZERO_DIGIT? }
 
-template_tag      =  { "<" ~ "/"? ~ template_tag_name ~ ">" }
-numbered          = _{ ("botstar" | "star" | "input") ~ ASCII_NONZERO_DIGIT? }
-template_tag_name =  { (numbered | format_tag_name | "call" | "id" | "@") }
+// Single tags
 
-variable_ref_tag = { "<" ~ ("bot" | "env") ~ var_name ~ ">"}
-operation    = { ("get" | "set" | "add" | "sub" | "mult" | "div") }
-variable_set_tag = { "<" ~ operation ~ " " ~ var_name ~ "=" ~ value ~ ">" }
+variable_ref_tag   = { "<" ~ ("bot" | "env") ~ var_name ~ ">" }
+response_tag_names = { (numbered_names | "id" | "@") }
+response_tag       = { "<" ~ (paired_tag_names | response_tag_names) }
+operation          = { ("get" | "set" | "add" | "sub" | "mult" | "div") }
+variable_set_tag   = { "<" ~ operation ~ " " ~ var_name ~ "=" ~ (tag | value) ~ ">" }
+single_tag         = { (response_tag | variable_set_tag | variable_ref_tag) }
+
+// Paired tags
+paired_tag_names = { ("random" | "person" | "formal" | "sentence" | "uppercase" | "lowercase") }
+paired_tag       = {
+    "{" ~ PUSH(paired_tag_names) ~ "}" ~ (txt | tag)+ ~ "{\\" ~ POP ~ "}"
+}
+
+tag = { (single_tag | paired_tag) }
 
 topic  = @{ "{topic=" ~ ASCII_ALPHANUMERIC+ ~ "}" }
 weight = @{ "{weight=" ~ ASCII_DIGIT+ ~ "}" }
 
 format_tag = @{ "{" ~ "/"? ~ format_tag_name ~ "}" }
-
-format_tag_name = { ("random" | "person" | "formal" | "sentence" | "uppercase" | "lowercase") }
 
 ok = { "{ok}" }
 
