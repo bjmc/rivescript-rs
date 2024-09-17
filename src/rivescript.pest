@@ -12,7 +12,7 @@ COMMENT    = _{ ("/*" ~ (!"*/" ~ ANY)* ~ "*/") | ("//" ~ (!NEWLINE ~ ANY)*) }
 continue   = _{ NEWLINE ~ "^" }
 blank_line = _{ NEWLINE }
 EOL        = _{ !continue ~ NEWLINE }
-special    =  { ("{" | "<" | "//" | "/*") }
+special    =  { ("{" | "<" | "}" | ">" | "//" | "/*") }
 txt        = _{ !(EOL | special) ~ ASCII }
 
 // Defintions:
@@ -20,7 +20,7 @@ definition          =  { "!" ~ (variable_definition | version_declaration) }
 inline_definition   = @{ "{" ~ definition ~ "}" }
 var_type            =  { ("global" | "var" | "array" | "sub" | "person") }
 var_name            =  { (ASCII_ALPHA | "_")+ }
-value               =  { (!NEWLINE ~ ANY)* }
+value               =  { txt+ }
 version_number      =  { ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+){, 2} }
 version_declaration =  { "version" ~ "=" ~ version_number }
 variable_definition =  { var_type ~ var_name ~ "=" ~ value }
@@ -67,7 +67,7 @@ variable_ref_tag   = { "<" ~ ("bot" | "env") ~ var_name ~ ">" }
 response_tag_names = { (numbered_names | "id" | "@") }
 response_tag       = { "<" ~ (paired_tag_names | response_tag_names) }
 operation          = { ("get" | "set" | "add" | "sub" | "mult" | "div") }
-variable_set_tag   = { "<" ~ operation ~ " " ~ var_name ~ "=" ~ (tag | value) ~ ">" }
+variable_set_tag   = { "<" ~ operation ~ var_name ~ "=" ~ (tag | value) ~ ">" }
 single_tag         = { (response_tag | variable_set_tag | variable_ref_tag) }
 
 // Paired tags
